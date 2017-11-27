@@ -1,5 +1,5 @@
 # iris
-Iris is a Google Play Store metadata scraper mean to run in a container
+Iris is a Google Play Store metadata scraper meant to run in a docker container
 
 # Setup
 Install Docker (https://docs.docker.com/engine/installation/)
