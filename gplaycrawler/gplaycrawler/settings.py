@@ -8,6 +8,8 @@
 #     http://doc.scrapy.org/en/latest/topics/settings.html
 #
 
+import os
+
 BOT_NAME = 'gplaycrawler'
 
 SPIDER_MODULES = ['gplaycrawler.spiders']
@@ -31,4 +33,4 @@ AUTOTHROTTLE_START_DELAY = 1
 db_name = 'gplay'
 db_username = 'postgres'
 db_password = 'postgres'
-db_host = '127.0.0.1'
+db_host = os.environ['POSTGRES_HOST']#'127.0.0.1'
