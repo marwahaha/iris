@@ -26,5 +26,9 @@ cd compose
 docker-compose up
 ```
 
+# Storage
+
+PostgreSQL storage persists in a docker volume.  The PostgreSQL server can be found at <DOCKER_IP_HOST_HERE>:5432
+
 ## History
 Iris is almost entirely forked from an abondoned project Manoj Saha (https://github.com/manojps/google-play-apps-crawler-scrapy) -- so credit goes to him for most of this.  My intentions are do dockerize both it and the postgresql storage into one easy to run application.
