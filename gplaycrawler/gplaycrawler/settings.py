@@ -26,3 +26,9 @@ DOWNLOAD_TIMEOUT = 60
 ##REDIRECT_ENABLED = False
 AUTOTHROTTLE_ENABLED = True
 AUTOTHROTTLE_START_DELAY = 1
+
+#DB Settings
+db_name = 'gplay'
+db_username = 'postgres'
+db_password = 'postgres'
+db_host = '127.0.0.1'
