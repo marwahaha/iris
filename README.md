@@ -12,6 +12,15 @@ Install docker-compose (https://docs.docker.com/compose/install/)
 Cloning this repo gets you the source code and the docker setup files necessary to build/run it. The compose file pulls from dockerhub (it does NOT build from the given Dockefile here, but that may be used instead if desired).
 
 
+You will need to configure the crawler to point to the correct postgresql server (the IP your host running docker)
+
+```
+gplay-crawler:
+   image: behren/gplaycrawler
+   environment:
+    - POSTGRES_HOST=<DOCKER_IP_HOST_HERE>
+```
+
 ```
 cd compose
 docker-compose up
