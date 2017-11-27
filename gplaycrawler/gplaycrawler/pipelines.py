@@ -17,13 +17,14 @@ from scrapy.exceptions import DropItem
 #from scrapy.contrib.pipeline.images import ImagesPipeline  
 import time  
 import psycopg2 
+from settings import db_name, db_username, db_host, db_password
 
   
   
 class GplayPipeline(object):  
   
     def __init__(self):  
-        self.conn = psycopg2.connect("dbname='gplay' user='postgres' host='localhost' password='postgres'")
+        self.conn = psycopg2.connect("dbname='{}' user='{}' host='{}' password='{}'".format(db_name,
 ##        self.links_seen = []
         
     def process_item(self, item, spider):
