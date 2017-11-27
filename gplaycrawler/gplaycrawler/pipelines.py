@@ -25,7 +25,9 @@ class GplayPipeline(object):
   
     def __init__(self):  
         self.conn = psycopg2.connect("dbname='{}' user='{}' host='{}' password='{}'".format(db_name,
-##        self.links_seen = []
+                                                                                            db_username,
+                                                                                            db_host,
+                                                                                            db_password))##        self.links_seen = []
         
     def process_item(self, item, spider):
         spider.logger.info(item)
