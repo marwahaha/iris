@@ -3,12 +3,14 @@ Iris is a Google Play Store metadata scraper mean to run in a container
 
 # Setup
 Install Docker (https://docs.docker.com/engine/installation/)
+
 Install docker-compose (https://docs.docker.com/compose/install/)
 
 
 # Run
 
-Cloning this repo gets you the source code and the docker setup files necessary to build/run it.
+Cloning this repo gets you the source code and the docker setup files necessary to build/run it. The compose file pulls from dockerhub (it does NOT build from the given Dockefile here, but that may be used instead if desired).
+
 
 ```
 cd compose
