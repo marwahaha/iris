@@ -19,4 +19,5 @@ developer_badge TEXT,
 physical_address TEXT,
 video_url TEXT,
 developer_id TEXT,
+time_scraped timestamp default current_timestamp,
 PRIMARY KEY (app_id, version));
