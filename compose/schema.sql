@@ -19,4 +19,4 @@ developer_badge TEXT,
 physical_address TEXT,
 video_url TEXT,
 developer_id TEXT,
-PRIMARY KEY (app_id));
+PRIMARY KEY (app_id, version));
