@@ -33,10 +33,11 @@ class GplayPipeline(object):
         while tries<max_cn_tries:
             logging.info('Attempt {}/{} to connect to PostgreSQL at {}'.format(tries+1,max_cn_tries,db_host))
             try:
-                self.conn = psycopg2.connect("dbname='{}' user='{}' host='{}' password='{}' connect_timeout=3".format(db_name,
+                self.conn = psycopg2.connect("dbname='{}' user='{}' host='{}' password='{}' connect_timeout={}".format(db_name,
                                                                                                 db_username,
                                                                                                 db_host,
-                                                                                                db_password))##        self.links_seen = []
+                                                                                                db_password,
+                                                                                                db_connect_timeout))##        self.links_seen = []
                 break
             except psycopg2.OperationalError as e:
                 tries+=1

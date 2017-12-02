@@ -34,3 +34,4 @@ db_name = 'gplay'
 db_username = 'postgres'
 db_password = 'postgres'
 db_host = os.environ['POSTGRES_HOST']#'127.0.0.1'
+db_connect_timeout=3#seconds
