@@ -22,3 +22,10 @@ developer_id TEXT,
 time_scraped timestamp default current_timestamp,
 downloaded boolean default false, 
 PRIMARY KEY (app_id, version));
+
+CREATE TABLE orphaned(
+app_id TEXT,
+version TEXT,
+filepath TEXT,
+time_inserted timestamp default current_timestamp,
+PRIMARY KEY (app_id, version));
