@@ -21,7 +21,7 @@ ITEM_PIPELINES = {'gplaycrawler.pipelines.GplayPipeline': 100}
 USER_AGENT = 'Alo Ventures (+http://alo.ventures)'
 
 REACTOR_THREADPOOL_MAXSIZE = 20
-LOG_LEVEL = 'INFO'
+LOG_LEVEL = 'DEBUG'
 COOKIES_ENABLED = False
 ##RETRY_ENABLED = False
 DOWNLOAD_TIMEOUT = 60

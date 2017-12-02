@@ -15,4 +15,4 @@ gplay-postgres:
 gplay-crawler:
    image: behren/gplaycrawler
    environment:
-    - POSTGRES_HOST=192.168.1.250
+    - POSTGRES_HOST=192.168.20.154
