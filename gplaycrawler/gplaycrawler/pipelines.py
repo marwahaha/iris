@@ -20,7 +20,7 @@ from scrapy.http import Request
 from scrapy.exceptions import DropItem 
 import psycopg2 
 
-from settings import db_name, db_username, db_host, db_password
+from settings import db_name, db_username, db_host, db_password, db_connect_timeout
 
   
   
