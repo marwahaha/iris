@@ -30,8 +30,9 @@ AUTOTHROTTLE_ENABLED = True
 AUTOTHROTTLE_START_DELAY = 1
 
 #DB Settings
-db_name = 'gplay'
-db_username = 'postgres'
-db_password = 'postgres'
-db_host = os.environ['POSTGRES_HOST']#'127.0.0.1'
-db_connect_timeout=3#seconds
+#DB Settings
+db_config = {'dbname': 'gplay',
+             'user': 'postgres',
+             'password': 'postgres',
+             'host': os.environ['POSTGRES_HOST'] if 'POSTGREST_HOST' in os.environ.keys() else '127.0.0.1',
+             'connect_timeout': 3}

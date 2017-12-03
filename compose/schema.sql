@@ -20,7 +20,8 @@ physical_address TEXT,
 video_url TEXT,
 developer_id TEXT,
 time_scraped timestamp default current_timestamp,
-downloaded boolean default false, 
+downloaded boolean default FALSE, 
+filepath TEXT default null,
 PRIMARY KEY (app_id, version));
 
 CREATE TABLE orphaned(

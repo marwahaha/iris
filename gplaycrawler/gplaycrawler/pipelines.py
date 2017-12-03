@@ -20,7 +20,7 @@ from scrapy.http import Request
 from scrapy.exceptions import DropItem 
 import psycopg2 
 
-from settings import db_name, db_username, db_host, db_password, db_connect_timeout
+from settings import db_config
 
   
   
@@ -33,12 +33,7 @@ class GplayPipeline(object):
         while tries<max_cn_tries:
             logging.info('Attempt {}/{} to connect to PostgreSQL at {}'.format(tries+1,max_cn_tries,db_host))
             try:
-                self.conn = psycopg2.connect("dbname='{}' user='{}' host='{}' password='{}' connect_timeout={}".format(db_name,
-                                                                                                db_username,
-                                                                                                db_host,
-                                                                                                db_password,
-                                                                                                db_connect_timeout))##        self.links_seen = []
-                break
+                self.conn = psycopg2.connect(**db_config)
             except psycopg2.OperationalError as e:
                 tries+=1
                 if tries == max_cn_tries:
@@ -65,7 +60,7 @@ class GplayPipeline(object):
                   
                   cur.execute("""insert into apps 
                                 (app_id, item_name, updated, author, filesize, downloads, version, compatibility, content_rating, author_link, genre, price, rating_value, review_number, description, iap, developer_badge, physical_address, video_url, developer_id) 
-                                values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", (item["Link"][46:], item["Item_name"], item["Updated"], item["Author"], item["Filesize"], item["Downloads"], item["Version"], item["Compatibility"], item["Content_rating"], item["Author_link"], item["Genre"], item["Price"], item["Rating_value"], item["Review_number"], item["Description"], item["IAP"], item["Developer_badge"], item["Physical_address"], item["Video_URL"], item["Developer_ID"]))
+                                values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", (item["Package"], item["Item_name"], item["Updated"], item["Author"], item["Filesize"], item["Downloads"], item["Version"], item["Compatibility"], item["Content_rating"], item["Author_link"], item["Genre"], item["Price"], item["Rating_value"], item["Review_number"], item["Description"], item["IAP"], item["Developer_badge"], item["Physical_address"], item["Video_URL"], item["Developer_ID"]))
                   self.conn.commit()
                   break
               except:

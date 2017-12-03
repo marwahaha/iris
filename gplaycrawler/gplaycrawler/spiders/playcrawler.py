@@ -28,6 +28,7 @@ class MySpider(CrawlSpider):
       for titles in titles :
         item = GplaycrawlerItem()
         item["Link"] = response.request.url#''.join(titles.select('head/link[5]/@href').extract())
+        item['Package'] = item["Link"][46:]
         item["Item_name"] = ''.join(titles.select('//*[@class="document-title"]/div/text()').extract())
         item["Updated"] = ''.join(titles.select('//*[@itemprop="datePublished"]/text()').extract())
         item["Author"] = ''.join(titles.select('//*[@itemprop="author"]/a/span/text()').extract())
