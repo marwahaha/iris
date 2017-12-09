@@ -34,5 +34,9 @@ AUTOTHROTTLE_START_DELAY = 1
 db_config = {'dbname': 'gplay',
              'user': 'postgres',
              'password': 'postgres',
-             'host': os.environ['POSTGRES_HOST'] if 'POSTGREST_HOST' in os.environ.keys() else '127.0.0.1',
+             'host': os.environ['POSTGRES_HOST'] if 'POSTGRES_HOST' in os.environ.keys() else '127.0.0.1',
              'connect_timeout': 3}
+
+#rabbitmq settings
+rabbitmq_server_host = os.environ['RABBITMQ_HOST'] if 'RABBITMQ_HOST' in os.environ.keys() else '127.0.0.1'
+rabbitmq_queue = 'gplay'

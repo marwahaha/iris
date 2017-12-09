@@ -10,6 +10,7 @@
 ##    def process_item(self, item, spider):
 ##        return item 
 #from scrapy.contrib.pipeline.images import ImagesPipeline  
+import json
 import logging
 import sys
 import time  
@@ -18,9 +19,11 @@ import time
 from twisted.enterprise import adbapi  
 from scrapy.http import Request  
 from scrapy.exceptions import DropItem 
+import pika
 import psycopg2 
 
-from settings import db_config
+from settings import rabbitmq_server_host, rabbitmq_queue
+from queries import get_conn, get_cursor
 
   
   
@@ -30,10 +33,13 @@ class GplayPipeline(object):
         tries=0
         max_cn_tries=5
         self.conn = None
+        self.rabbit_mq_connection = None
+        self.channel = None
         while tries<max_cn_tries:
-            logging.info('Attempt {}/{} to connect to PostgreSQL at {}'.format(tries+1,max_cn_tries,db_host))
+            logging.info('Attempt {}/{} to connect to PostgreSQL at {}'.format(tries+1,max_cn_tries,db_config['host']))
             try:
-                self.conn = psycopg2.connect(**db_config)
+                self.conn = get_conn()
+                break
             except psycopg2.OperationalError as e:
                 tries+=1
                 if tries == max_cn_tries:
@@ -42,30 +48,53 @@ class GplayPipeline(object):
                     sys.exit()
                 time.sleep(1)
 
-
+        tries=0
+        max_cn_tries=10
+        while tries<max_cn_tries:
+            logging.info('Attempt {}/{} to connect to RabbitMQ at {}'.format(tries+1,max_cn_tries,rabbitmq_server_host))
+            try:
+                self.rabbit_mq_connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_server_host))
+                self.channel = self.rabbit_mq_connection.channel()
+                self.channel.queue_declare(rabbitmq_queue)
+                break
+            except Exception as e:
+                tries+=1
+                if tries == max_cn_tries:
+                    logging.exception(e)
+                    logging.error('could not create connection to {} or declare queue {}'.format(rabbitmq_server_host, rabbitmq_queue))
+                    sys.exit()
+                time.sleep(1)
 
     def process_item(self, item, spider):
-        spider.logger.info(item)
+        """ 
+        Put new items on the DB and publish to the rabbitmq for downloading
+        """
         if str(item['Link']).find('details?id') != - 1:
-##        if item['Link'] in self.links_seen:
-##            raise DropItem("Duplicate item found: %s" % item)
-##        else:
-##            self.links_seen.append(item['Link'])
-          tries=0
-          max_tries=3
-          while tries<max_tries:
-              try:
-                  cur = self.conn.cursor()
-    ##        cur.execute("insert into apps (link, item_name, updated, author, filesize, downloads, version, compatibility, content_rating, author_link, author_link_test, genre, price, rating_value, review_number, description, iap, developer_badge, physical_address, video_url, developer_id) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (item["Link"], item["Item_name"], item["Updated"], item["Author"], item["Filesize"], item["Downloads"], item["Version"], item["Compatibility"], item["Content_rating"], item["Author_link"], item["Author_link_test"], item["Genre"], item["Price"], item["Rating_value"], item["Review_number"], item["Description"], item["IAP"], item["Developer_badge"], item["Physical_address"], item["Video_URL"], item["Developer_ID"]))
-                  
-                  cur.execute("""insert into apps 
-                                (app_id, item_name, updated, author, filesize, downloads, version, compatibility, content_rating, author_link, genre, price, rating_value, review_number, description, iap, developer_badge, physical_address, video_url, developer_id) 
-                                values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", (item["Package"], item["Item_name"], item["Updated"], item["Author"], item["Filesize"], item["Downloads"], item["Version"], item["Compatibility"], item["Content_rating"], item["Author_link"], item["Genre"], item["Price"], item["Rating_value"], item["Review_number"], item["Description"], item["IAP"], item["Developer_badge"], item["Physical_address"], item["Video_URL"], item["Developer_ID"]))
-                  self.conn.commit()
-                  break
-              except:
-                  self.conn.rollback()
-                  tries+=1
-                  time.sleep(1)
+            cur = get_cursor(self.conn)
 
-        return item  
+            tries=0
+            max_tries=3
+            while tries<max_tries:
+                try:
+                    insert_app(item, commit=False)
+                    duplicate = False
+
+                    #push to queue
+                    serializable_item = dict(item)
+                    self.channel.publish(exchange='',
+                                         routing_key=rabbitmq_queue,
+                                         body=json.dumps(serializable_item),
+                                         properties=pika.BasicProperties(content_type='application/json'))
+                    self.conn.commit()
+                    break
+                except psycopg2.IntegrityError as e:
+                    #duplicate
+                    self.conn.rollback()
+                    spider.logger.exception(e)
+                    break
+                except Exception as e:
+                    spider.logger.exception(e)
+                    tries+=1
+                    time.sleep(1)
+
+        return item

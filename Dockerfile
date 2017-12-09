@@ -13,6 +13,7 @@ RUN apk add --update \
     py-psycopg2 
 
 RUN pip install Scrapy \
+    && pip install pika \
     && rm -rf /var/cache/apk*
 
 WORKDIR /app

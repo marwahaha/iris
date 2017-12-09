@@ -10,7 +10,7 @@ class GplaycrawlerItem(scrapy.Item):
     # define the fields for your item here like:
     # name = Field()
     Link = scrapy.Field()
-    Package = scarpy.Field()
+    Package = scrapy.Field()
     Item_name = scrapy.Field()
     Updated = scrapy.Field()
     Author = scrapy.Field()
