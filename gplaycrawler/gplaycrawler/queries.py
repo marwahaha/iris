@@ -2,7 +2,7 @@ import functools
 import time
 
 import psycopg2 
-import psycopg2.extras
+
 from settings import db_config
 
 def retry(tries=3):
@@ -29,16 +29,16 @@ def get_conn():
     conn = psycopg2.connect(**db_config)
     return conn
 
-@retry
+@retry()
 def get_cursor(conn):
-    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur = conn.cursor()
     return cur
 
-@retry
-def insert_app(cursor, commit=True):
-    cur.execute("""insert into apps 
+@retry()
+def insert_app(cursor, item):
+    cursor.execute("""insert into apps 
                     (app_id, item_name, updated, author, filesize, downloads, version, compatibility, content_rating, author_link, genre, price, rating_value, review_number, description, iap, developer_badge, physical_address, video_url, developer_id) 
-                    values ({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})""".format(item["Package"],
+                    values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);""", (item["Package"],
                                                                                                                       item["Item_name"],
                                                                                                                       item["Updated"],
                                                                                                                       item["Author"],
@@ -59,5 +59,5 @@ def insert_app(cursor, commit=True):
                                                                                                                       item["Video_URL"],
                                                                                                                       item["Developer_ID"]))
                     
-    if commit:
-        self.conn.commit()
+    # if commit:
+        # self.conn.commit()

@@ -23,7 +23,7 @@ import pika
 import psycopg2 
 
 from settings import rabbitmq_server_host, rabbitmq_queue
-from queries import get_conn, get_cursor
+from queries import get_conn, get_cursor, insert_app
 
   
   
@@ -55,7 +55,7 @@ class GplayPipeline(object):
             try:
                 self.rabbit_mq_connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_server_host))
                 self.channel = self.rabbit_mq_connection.channel()
-                self.channel.queue_declare(rabbitmq_queue)
+                self.channel.queue_declare(rabbitmq_queue, durable=True)
                 break
             except Exception as e:
                 tries+=1
@@ -76,7 +76,7 @@ class GplayPipeline(object):
             max_tries=3
             while tries<max_tries:
                 try:
-                    insert_app(item, commit=False)
+                    insert_app(cur, item)
                     duplicate = False
 
                     #push to queue

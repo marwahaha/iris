@@ -23,7 +23,7 @@ gplay-rabbitmq:
     - "25672:25672"
     - "15672:15672"
   volumes:
-    - gplay-rabbitmq-data:/var/lib/rabbitmq/mnesia
+    - gplay-rabbitmq-data:/var/lib/rabbitmq
 
 gplay-crawler:
   restart: always
