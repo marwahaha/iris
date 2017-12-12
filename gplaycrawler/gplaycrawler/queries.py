@@ -61,7 +61,3 @@ def insert_app(cursor, commit=True):
                     
     if commit:
         self.conn.commit()
-
-if __name__ == '__main__':
-    conn = get_conn()
-    cursor = get_cursor(conn)
