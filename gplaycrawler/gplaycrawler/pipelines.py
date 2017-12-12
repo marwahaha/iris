@@ -84,7 +84,7 @@ class GplayPipeline(object):
                     self.channel.publish(exchange='',
                                          routing_key=rabbitmq_queue,
                                          body=json.dumps(serializable_item),
-                                         properties=pika.BasicProperties(content_type='application/json'))
+                                         properties=pika.BasicProperties(content_type='application/json',delivery_mode=2))#2 = write to disk
                     self.conn.commit()
                     break
                 except psycopg2.IntegrityError as e:

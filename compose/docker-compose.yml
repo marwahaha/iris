@@ -23,11 +23,11 @@ gplay-rabbitmq:
     - "25672:25672"
     - "15672:15672"
   volumes:
-    - gplay-rabbitmq-data:/var/lib/rabbitmq
+    - gplay-rabbitmq-data:/var/lib/rabbitmq/mnesia
 
 gplay-crawler:
   restart: always
   image: behren/gplaycrawler
   environment:
-    - POSTGRES_HOST=192.168.20.154
-    - RABBITMQ_HOST=192.168.20.154
+    - POSTGRES_HOST=192.168.20.155
+    - RABBITMQ_HOST=192.168.20.155
