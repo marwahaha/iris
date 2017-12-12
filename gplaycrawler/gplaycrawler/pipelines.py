@@ -36,7 +36,7 @@ class GplayPipeline(object):
         self.rabbit_mq_connection = None
         self.channel = None
         while tries<max_cn_tries:
-            logging.info('Attempt {}/{} to connect to PostgreSQL at {}'.format(tries+1,max_cn_tries,db_config['host']))
+            logging.info('Attempt {}/{} to connect to PostgreSQL'.format(tries+1,max_cn_tries))
             try:
                 self.conn = get_conn()
                 break
