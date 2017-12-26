@@ -37,14 +37,15 @@ def get_cursor(conn):
 @retry()
 def insert_app(cursor, item):
     cursor.execute("""insert into apps 
-                    (app_id, item_name, updated, author, filesize, downloads, version, compatibility, content_rating, author_link, genre, price, rating_value, review_number, description, iap, developer_badge, physical_address, video_url, developer_id) 
-                    values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);""", (item["Package"],
+                    (app_id, item_name, updated, author, filesize, downloads, version, version_code, compatibility, content_rating, author_link, genre, price, rating_value, review_number, description, iap, developer_badge, physical_address, video_url, developer_id) 
+                    values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);""", (item["Package"],
                                                                                                                       item["Item_name"],
                                                                                                                       item["Updated"],
                                                                                                                       item["Author"],
                                                                                                                       item["Filesize"],
                                                                                                                       item["Downloads"],
                                                                                                                       item["Version"],
+                                                                                                                      item['version_code'],
                                                                                                                       item["Compatibility"],
                                                                                                                       item["Content_rating"],
                                                                                                                       item["Author_link"],

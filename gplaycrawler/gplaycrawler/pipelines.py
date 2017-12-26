@@ -24,6 +24,7 @@ import psycopg2
 
 from settings import rabbitmq_server_host, rabbitmq_queue
 from queries import get_conn, get_cursor, insert_app
+from googleplay_api_standalone import connect_to_googleplay_api
 
   
   
@@ -65,22 +66,25 @@ class GplayPipeline(object):
                     sys.exit()
                 time.sleep(1)
 
+        self.playstore_api = connect_to_googleplay_api()
+
     def process_item(self, item, spider):
         """ 
         Put new items on the DB and publish to the rabbitmq for downloading
         """
         if str(item['Link']).find('details?id') != - 1:
             cur = get_cursor(self.conn)
-
+            details = self.playstore_api.details(item['Package'])
+            serializable_item = dict(item)
+            serializable_item['version_code'] = details['versionCode']
             tries=0
             max_tries=3
             while tries<max_tries:
                 try:
-                    insert_app(cur, item)
+                    insert_app(cur, serializable_item)
                     duplicate = False
 
                     #push to queue
-                    serializable_item = dict(item)
                     self.channel.publish(exchange='',
                                          routing_key=rabbitmq_queue,
                                          body=json.dumps(serializable_item),

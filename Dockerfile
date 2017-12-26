@@ -14,6 +14,8 @@ RUN apk add --update \
 
 RUN pip install Scrapy \
     && pip install pika \
+    && pip install protobuf \
+    && pip install gpapi \
     && rm -rf /var/cache/apk*
 
 WORKDIR /app

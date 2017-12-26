@@ -44,3 +44,6 @@ db_config = {'dbname': 'gplay',
 #rabbitmq settings
 rabbitmq_server_host = os.environ['RABBITMQ_HOST'] if 'RABBITMQ_HOST' in os.environ.keys() else '127.0.0.1'
 rabbitmq_queue = 'gplay'
+
+#google play token
+token_url = 'https://matlink.fr/token/email/gsfid'

@@ -1,5 +1,4 @@
 gplay-postgres:
-  restart: always
   image: postgres:latest
   ports:
     - "5432:5432"
@@ -13,7 +12,6 @@ gplay-postgres:
     - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
 
 gplay-rabbitmq:
-  restart: always
   image: rabbitmq:3-management
   hostname: my-rabbit
   ports:
@@ -26,8 +24,7 @@ gplay-rabbitmq:
     - gplay-rabbitmq-data:/var/lib/rabbitmq
 
 gplay-crawler:
-  restart: always
   image: behren/gplaycrawler
   environment:
-    - POSTGRES_HOST=192.168.20.155
-    - RABBITMQ_HOST=192.168.20.155
+    - POSTGRES_HOST=192.168.20.158
+    - RABBITMQ_HOST=192.168.20.158
